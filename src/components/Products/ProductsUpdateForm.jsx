@@ -87,7 +87,7 @@ getBrandsProductTypesHairTypes()
 
 return (
   <form className="w-100 px-5">
-      <h1 className="mt-5">Создать новую запись</h1>
+      <h1 className="mt-5">Изменить</h1>
 
       <div className="mt-5">
           <label className="h3 form-label">Название</label>

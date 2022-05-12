@@ -31,15 +31,15 @@ const handleSubmit = (e) => {
     }
     console.log(props.productData);
 
-    let productIds = new Array()
+    let productsModel = new Array()
 
     props.productData.forEach((item) => {
         if (item.check) {
-            productIds.push(item.productID)
+            productsModel.push(item)
         }
       })
 
-      console.log(productIds);
+      console.log(productsModel);
 
     const itemToCreate = {
       supplyID: 0,
@@ -47,7 +47,7 @@ const handleSubmit = (e) => {
       data: formData.data,
       supplierID: formData.supplierID,
       userID: 2,
-      productIDs: productIds
+      productsModel: productsModel
     };
 
     const url = SuppliesUrl.API_URL_CREATE;
@@ -63,6 +63,7 @@ const handleSubmit = (e) => {
         .then(responseFromServer => {
             console.log(responseFromServer);
             props.onCreated(itemToCreate, responseFromServer);
+            setFormData(initialFormData)
         })
         .catch((error) => {
             console.log(error);

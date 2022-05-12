@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react'
-import { ProductsUrl } from '../api/Constants';
+import { CheckUrl, ProductsUrl } from '../api/Constants';
 import CheckCreateForm from '../components/Check/CheckCreateForm';
 
 const Checks = () => {
@@ -71,7 +71,40 @@ const Checks = () => {
         getProduct()
       }, [])
 
+      const checkSubmit = (e) => {
+          e.preventDefault();
 
+          if((ITOG.count - RECEIVED.received) >= 0){
+              alert(`Оплатите покупку польностью`);
+              return
+          }
+      
+          const itemToCreate = {
+            totalPrice: ITOG.count,
+            userID: 2,
+            productsModel: CHECK_LIST
+          };
+      
+          const url = CheckUrl.API_URL_CREATE;
+      
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(itemToCreate)
+          })
+              .then(response => response.json())
+              .then(responseFromServer => {
+                  console.log(responseFromServer);
+                  clearCheck()
+                  alert(`Заказ сделан`);
+              })
+              .catch((error) => {
+                  console.log(error);
+                  alert(error);
+              });
+      };
   
     return (
     <div>
@@ -96,11 +129,10 @@ const Checks = () => {
                   <label className="form-label">Сдача</label>
                   <p className="form-control">{MONEY.out}</p>
               </div>
-              <button className="btn btn-primary btn-lg w-100 mt-2" onClick={() => {{ if(window.confirm(`Заказ оплачен`)) clearCheck()}}}>Оплатить</button>
+              <button className="btn btn-primary btn-lg w-100 mt-2" onClick={(e) => checkSubmit(e)}>Оплатить</button>
             </div>
 
             <div className="col-8 justify-content-center align-items-center">
-              {/* <CheckActions CHECK_LIST={CHECK_LIST} SET_CHECK_LIST={SET_CHECK_LIST} /> */}
               <div className="table-responsive mt-5">
                   <h4>Заказ</h4>
                   <table className="table table-striped">
@@ -118,7 +150,7 @@ const Checks = () => {
                       {CHECK_LIST.map((item) => (
                       <tr key={item.productID}>
                           <td>{item.productName}</td>
-                          <td>{item.productQuantity}</td>
+                          <td>{item.countStock}</td>
                           <td>{item.unitPrice}</td>
                           <td>{item.summa}</td>
                           <td>
@@ -141,7 +173,8 @@ const Checks = () => {
                 setShowModal={setShowModal} 
                 showModal={showModal}
                 SET_ITOG={SET_ITOG}
-                ITOG={ITOG}/>
+                ITOG={ITOG}
+                onProductUpdated={onProductUpdated}/>
             }
     </div>
     )
@@ -156,6 +189,7 @@ const Checks = () => {
                   <th scope="col">Название</th>
                   <th scope="col">Объем</th>
                   <th scope="col">Цена</th>
+                  <th scope="col">Количество</th>
                   <th scope="col">Операции</th>
                 </tr>
               </thead>
@@ -165,6 +199,7 @@ const Checks = () => {
                     <td>{item.productName}</td>
                     <td>{item.volume}</td>
                     <td>{item.unitPrice}</td>
+                    <td>{item.countStock}</td>
                     <td>
                       <button onClick={() => handleShowModal(item)} className="btn btn-success mx-2">Выбрать</button>
                     </td>
@@ -186,10 +221,53 @@ const Checks = () => {
         });
     
         if (index !== -1) {
+          addDeleteCheck(copyData[index]);
           copyData.splice(index, 1);
         }
     
         SET_CHECK_LIST(copyData);
+      }
+
+      function addDeleteCheck(checkItem) {
+        
+        let copyDatas = [...PRODUCT_DATA];
+
+        const index = copyDatas.findIndex((copyData, currentIndex) => {
+          if (copyData.productID === checkItem.productID) {
+            return true;
+          }
+        });
+
+        copyDatas[index].countStock += checkItem.countStock*1;
+        console.log("Checks/addDeleteCheck-"+copyDatas[index].countStock);
+
+        SET_PRODUCT_DATA(copyDatas);
+      }
+
+      function onProductUpdated(updatedData) {
+    
+        if (updatedData === null) {
+          return;
+        }
+        console.log(updatedData);
+    
+        let dataCopy = [...PRODUCT_DATA];
+  
+        const index = dataCopy.findIndex((dataCopyPost) => {
+          if (dataCopyPost.productID === updatedData.productID) {
+            updatedData.countStock = dataCopyPost.countStock - updatedData.countStock;
+            return true;
+          }
+        });
+  
+        if (index !== -1) {
+          dataCopy[index] = updatedData;
+        }
+        console.log(dataCopy);
+  
+        SET_PRODUCT_DATA(dataCopy);
+  
+        alert(`Данные продуктов успешно обновлено.`);
       }
 }
 

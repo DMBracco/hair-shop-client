@@ -84,7 +84,7 @@ const ProductType = () => {
                 <td>{item.productTypeName}</td>
                 <td>
                   <button onClick={() => setBrandCurrentlyBeingUpdated(item)} className="btn btn-success mx-2">Изменить</button>
-                  <button onClick={() => { if(window.confirm(`Вы уверены, что хотите удалить сообщение под названием "${item.productTypeName}"?`)) deletePost(item.productTypeId) }} className="btn btn-danger mx-2">Удалить</button>
+                  {/* <button onClick={() => { if(window.confirm(`Вы уверены, что хотите удалить сообщение под названием "${item.productTypeName}"?`)) deletePost(item.productTypeId) }} className="btn btn-danger mx-2">Удалить</button> */}
                 </td>
               </tr>
             ))}

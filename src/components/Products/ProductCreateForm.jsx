@@ -86,10 +86,10 @@ export default function ProductCreateForm(props) {
   }, [])
   
   return (
-      <form className="w-100 px-5">
-          <h1 className="mt-5">Создать новый продукт</h1>
+      <form className="w-100">
+          <h1 className="mt-2">Создать новый продукт</h1>
   
-          <div className="mt-5">
+          <div className="mt-2">
               <label className="h3 form-label">Название</label>
               <input value={formData.productName} name="productName" type="text" className="form-control" onChange={handleChange} />
           </div>
@@ -129,10 +129,10 @@ export default function ProductCreateForm(props) {
               <input value={formData.volume} name="volume" type="text" className="form-control" onChange={handleChange} />
           </div>
 
-          <div className="mt-2">
+          {/* <div className="mt-2">
               <label className="h3 form-label">Количество</label>
               <input value={formData.countStock} name="countStock" type="text" className="form-control" onChange={handleChange} />
-          </div>
+          </div> */}
 
           <div className="mt-2">
               <label className="h3 form-label">Стоимость</label>

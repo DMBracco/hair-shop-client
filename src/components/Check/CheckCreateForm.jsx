@@ -9,9 +9,7 @@ export default function CheckCreateForm(props) {
         countStock: props.CHECK_DATA.countStock,
         unitPrice: props.CHECK_DATA.unitPrice,
         productQuantity: 1,
-        props: props.CHECK_DATA.props,
-        discount: props.CHECK_DATA.discountAmount,
-        discountSumma: props.CHECK_DATA.discountSumma
+        volume: props.CHECK_DATA.volume,
     });
 
     const [formData, setFormData] = useState(initialFormData);
@@ -25,29 +23,43 @@ export default function CheckCreateForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        let count = formData.productQuantity;
+
+        if((props.CHECK_DATA.countStock - formData.productQuantity) < 0){
+            alert(`Столько товара нет на складе`);
+            return
+        }
+
         const newSumma = formData.productQuantity*props.CHECK_DATA.unitPrice*1
-        const newDiscountSumma = (newSumma)-(newSumma*props.CHECK_DATA.discountAmount)
 
         const itemToAdd = {
             productID: props.CHECK_DATA.productID,
             productName: props.CHECK_DATA.productName,
-            productQuantity: formData.productQuantity,
             unitPrice: props.CHECK_DATA.unitPrice,
-            countStock: props.CHECK_DATA.countStock,
-            summa: newSumma,
-            discount: props.CHECK_DATA.discountAmount,
-            discountSumma: newDiscountSumma
+            countStock: count,
+            volume: props.CHECK_DATA.volume,
+            summa: newSumma
         };
+        console.log(itemToAdd);
         props.SET_CHECK_LIST(oldArray => [...oldArray, itemToAdd])
 
         props.SET_CHECK_DATA(null)
         props.setShowModal(false)
-        // props.SET_ITOG(props.ITOG + newDiscountSumma)
+
+        const itemCopy = {
+            productID: props.CHECK_DATA.productID,
+            productName: props.CHECK_DATA.productName,
+            unitPrice: props.CHECK_DATA.unitPrice,
+            countStock: count,
+            volume: props.CHECK_DATA.volume
+        };
+        props.onProductUpdated(itemCopy)
     };
 
     const handleClose = () => {
         props.setShowModal(false)
         props.SET_CHECK_DATA(null)
+        props.onProductUpdated(null)
     };
 
     return (
@@ -58,7 +70,7 @@ export default function CheckCreateForm(props) {
             <Modal.Body>
                 <div className="">
                     <label className="form-label">Товар</label>
-                    <input value={formData.productName} name="productName" type="text" className="form-control" onChange={handleChange} disabled />
+                    <p className="form-control">{formData.productName}c</p>
                 </div>
                 <div className="">
                     <label className="form-label">Количество</label>

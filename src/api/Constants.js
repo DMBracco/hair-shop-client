@@ -56,10 +56,16 @@ export const ProductsUrl = {
 }
 
 export const AccountsUrl = {
-    API_URL_CHECK_USER: `${API_BASE_URL_DEVELOPMENT}/account-check-user`
+    API_URL_LOGIN_USER: `${API_BASE_URL_DEVELOPMENT}/account-login-user`,
+    API_URL_REGISTER_USER: `${API_BASE_URL_DEVELOPMENT}/account-register-user`,
+    API_URL_GET_ROLES: `${API_BASE_URL_DEVELOPMENT}/account-get-role`
 }
 
 export const UserRole = {
     ADMIN: 'admin',
     USER: 'user'
+}
+
+export const CheckUrl = {
+    API_URL_CREATE: `${API_BASE_URL_DEVELOPMENT}/check-post`,
 }
